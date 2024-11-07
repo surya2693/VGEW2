@@ -25,7 +25,7 @@ class Constant {
   static const termsOfUseUrl = 'https://jifytestbucket.s3.ap-south-1.amazonaws.com/Legal/TermsOfUser.pdf';
   static const kmTermsUrl = 'https://jifytestbucket.s3.ap-south-1.amazonaws.com/Legal/KMTermsOfUse.pdf';
   static const privacyPolicy = 'https://jifytestbucket.s3.ap-south-1.amazonaws.com/Legal/PrivacyPolicy.pdf';
-
+  static String googleMapsApiKey ="AIzaSyC6DzzzyxhWVhGu57StaCm2mPuBcfnzwds";
   static String tartanWebUser = 'TARTAN_WEB_USER';
   static String tartanNativeUser = 'TARTAN_NATIVE_USER';
   static String firstTimeUser = 'FIRST_TIME_USER';

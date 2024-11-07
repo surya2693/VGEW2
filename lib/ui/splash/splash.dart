@@ -25,14 +25,19 @@ class _SplashState extends State<Splash> {
   @override
   void initState() {
     super.initState();
-    if (Constant.isPermissionGranted) {
-      navigateToNextPage(context);
-    } else {
-      //Calling API after UI renders
       WidgetsBinding.instance?.addPostFrameCallback((_) {
-        permissionPrompt(context);
+        navigateToNextPage(context);
       });
-    }
+
+
+    // if (Constant.isPermissionGranted) {
+    //   navigateToNextPage(context);
+    // } else {
+    //   //Calling API after UI renders
+    //   WidgetsBinding.instance?.addPostFrameCallback((_) {
+    //     permissionPrompt(context);
+    //   });
+    // }
   }
 
   @override

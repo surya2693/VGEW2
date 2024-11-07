@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../utils/commonTextFields.dart';
 import '../../utils/common_functions.dart';
+import '../mapScreen/mapScreen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -68,7 +69,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   Container(
                     child: commonButton(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>GoogleMapPage()));
+                        },
                         btnName: "Submit",
                         btncolors: Colors.green,
                         width: devicewidth),
