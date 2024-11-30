@@ -24,7 +24,7 @@ class HomeViewModel extends BaseViewModel {
       var data = await _homeRepository.fetchHome();
       if (data != null) {
         _homeResponseModel = data;
-      //  print('_homeResponseModel::: ${_homeResponseModel?.data?[0].firstName ?? Strings.homePage}');
+        print('_homeResponseModel::: ${_homeResponseModel?.data?[0].firstName ?? Strings.homePage}');
         //Success State
         setState(ViewState.success);
       }else{

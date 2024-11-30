@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 import '../../utils/commonTextFields.dart';
 import '../../utils/common_functions.dart';
+import '../dxf/dxfPage.dart';
+import '../home/home_screen.dart';
 import '../mapScreen/mapScreen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -70,7 +72,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   Container(
                     child: commonButton(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>GoogleMapPage()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
+                         // Navigator.push(context, MaterialPageRoute(builder: (context)=>DFXpage()));
                         },
                         btnName: "Submit",
                         btncolors: Colors.green,

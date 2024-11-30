@@ -1,15 +1,13 @@
-import 'package:base_flutter_provider_project/common_widgets/loading_widgets/loader.dart';
 import 'package:base_flutter_provider_project/constants/dimensions.dart';
 import 'package:base_flutter_provider_project/constants/strings.dart';
 import 'package:base_flutter_provider_project/utils/common_functions.dart';
 import 'package:base_flutter_provider_project/utils/logger.dart';
 import 'package:base_flutter_provider_project/viewModel/base_view_model/base_view_model.dart';
-import 'package:base_flutter_provider_project/viewModel/chatbotlist_viewmodel.dart';
 import 'package:base_flutter_provider_project/viewModel/home_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../viewModel/test_viewmodel.dart';
+import '../mapScreen/mapScreen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -40,12 +38,34 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Select Chainage".toUpperCase(),),
+      ),
+      body: Column(
+        children: [
+         buildListTile("Right Selection",() {
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>GoogleMapPage()));
+         },),
+         SizedBox(height: 8,),
+         buildListTile("Left Selection",() {
 
-        ),
-      )
+         },),
+        ],
+      ),
+    );
+  }
+
+   buildListTile(String title,VoidCallback onPressed) {
+    return InkWell(
+      onTap: onPressed,
+      child: Card(
+           child: ListTile(
+             trailing: Icon(Icons.arrow_circle_right_outlined,color: Colors.green,),
+             leading: Icon(Icons.add,color: Colors.green,),
+             title: Text(title,style: TextStyle(fontWeight: FontWeight.bold),),
+           ),
+         ),
     );
   }
 
@@ -96,14 +116,3 @@ class _HomePageState extends State<HomePage> {
 }
 
 
-/*
-Scaffold(
-appBar: AppBar(title: Text("Sample Api Provider")),
-body: Consumer<ChatBotlistViewModel>(
-builder: (context, viewModel, child) {
-return viewModel.state == ViewState.busy
-? const Loader()
-    : _renderBody();
-},
-),
-),*/
