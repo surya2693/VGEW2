@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:base_flutter_provider_project/constants/constant.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hive/hive.dart';
 import 'package:location/location.dart';
 import 'package:geolocator/geolocator.dart';
 class GoogleMapPage extends StatefulWidget {
@@ -31,6 +32,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
     super.initState();
     WidgetsBinding.instance
         .addPostFrameCallback((_) async => await initializeMap());
+    _loadMarkers();
   }
 
   Future<void> initializeMap() async {
@@ -82,13 +84,84 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
       point2.longitude,
     );
   }
+  void _loadMarkers() {
+    final box = Hive.box('markers');
+    final markersData = box.values.toList();
+
+
+    setState(() {
+      _markers.addAll(
+        box.values.map((markerData) {
+          return Marker(
+            markerId: MarkerId(markerData['id']),
+            position: LatLng(markerData['latitude'], markerData['longitude']),
+            infoWindow: InfoWindow(
+              title: markerData['title'],
+              snippet: markerData['snippet'],
+            ),
+          );
+        }),
+      );
+
+
+    print('retrived data :: ${_markers.length}');
+
+    // Add polylines to the map by connecting consecutive markers
+    if (markersData.length > 1) {
+      for (int i = 0; i < markersData.length - 1; i++) {
+        final start = LatLng(
+          markersData[i]['latitude'],
+          markersData[i]['longitude'],
+        );
+        final end = LatLng(
+          markersData[i + 1]['latitude'],
+          markersData[i + 1]['longitude'],
+        );
+
+        _polylines.add(Polyline(
+          polylineId: PolylineId('polyline_$i'),
+          points: [start, end],
+          color: Colors.blue,
+          width: 5,
+        ));
+      }
+    }
+
+    // Set the previous point for future marker additions
+    if (markersData.isNotEmpty) {
+      final lastMarkerData = markersData.last;
+      _previousPoint = LatLng(lastMarkerData['latitude'], lastMarkerData['longitude']);
+      print('Previous Point Set: $_previousPoint');
+    }
+
+      if (_markers.length > 1) {
+        final previousMarker = _markers.first;
+        // final distance = calculateDistance(previousMarker.position, tappedPoint);
+        //  final distance = calculateDistance(LatLng(28.7041, 77.1025), LatLng(19.0760, 72.8777)); // returns CM
+        totalDistance = calculateDistanceMath(previousMarker.position.latitude, previousMarker.position.longitude, markersData.last['latitude'], markersData.last['longitude']);
+        //  var radius = calculateDistanceMath(28.7041, 77.1025, 19.0760, 72.8777); // returns KM
+        // print('Distance between markers: $totalDistance meters');
+        // print('Previous point: ${previousMarker.position}');
+        // print('Tapped point: $tappedPoint');
+        // Display the distance on the map or in a list, etc.
+      }
+    });
+  }
+
   void _onMapTap(LatLng tappedPoint) async{
     if (await _handleLocationPermission()) {
-    // setState(() {
-    //   _selectedLatLng = latLng;
-    //   print('Tapped coordinates: ${latLng.latitude}, ${latLng.longitude}');
-    // });
 
+      final markerData = {
+        'id': tappedPoint.toString(),
+        'latitude': tappedPoint.latitude,
+        'longitude': tappedPoint.longitude,
+        'title': 'Tapped Point',
+        'snippet': 'Latitude: ${tappedPoint.latitude}, Longitude: ${tappedPoint.longitude}',
+      };
+
+      box?.add(markerData);
+
+      print('OnTap markers:: ${box?.values.toList().length}');
     setState(() {
       _markers.add(Marker(
         markerId: MarkerId(tappedPoint.toString()),
@@ -98,7 +171,6 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
           snippet: 'Latitude: ${tappedPoint.latitude}, Longitude: ${tappedPoint.longitude}',
         ),
       ));
-
       if (_previousPoint != null) {
         _polylines.add(Polyline(
           polylineId: PolylineId('polyline_${_polylines.length}'),
@@ -119,17 +191,24 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
         print('Tapped point: $tappedPoint');
         // Display the distance on the map or in a list, etc.
       }
-
       _previousPoint = tappedPoint;
     });
 
 
     }else {
-      // Handle permission denied
       print('Location permission denied');
     }
   }
 
+  void clearAllMarkers() {
+    final box = Hive.box('markers');
+    box.clear();
+    print('All markers cleared');
+    setState(() {
+      _markers.clear();
+      _polylines.clear();
+    });
+  }
 
 
   @override
@@ -153,18 +232,45 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
             bottom: 150,
             right: 15,
             child:
-            Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  'Distance: ${formatToTwoDecimals(totalDistance ?? 0.0)} KM',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      'Distance: ${formatToTwoDecimals(totalDistance ?? 0.0)} KM',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
                 ),
-              ),
+                InkWell(
+                  onTap: clearAllMarkers,
+                  child: Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    child: const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            'Delete Points',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(width: 10,),
+                          Icon(Icons.delete,color: Colors.red,)
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              ],
             )
           ),
+
         ],
       )
   );

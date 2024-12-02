@@ -3,9 +3,7 @@ import 'package:base_flutter_provider_project/constants/theme_color.dart';
 import 'package:base_flutter_provider_project/routes/router_pages.gr.dart';
 import 'package:base_flutter_provider_project/ui/splash/splash.dart';
 import 'package:base_flutter_provider_project/utils/app_bar_theme.dart';
-import 'package:base_flutter_provider_project/viewModel/chatbotlist_viewmodel.dart';
 import 'package:base_flutter_provider_project/viewModel/home_viewmodel.dart';
-import 'package:base_flutter_provider_project/viewModel/test_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -31,9 +29,7 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<HomeViewModel>(create: (BuildContext ctx) => HomeViewModel(),),
-        ChangeNotifierProvider<TestViewModel>(create: (BuildContext ctx) => TestViewModel(),),
-        ChangeNotifierProvider<ChatBotlistViewModel>(create: (BuildContext ctx) => ChatBotlistViewModel(),),
-      ],
+        ],
       child: MaterialApp(
         title: Strings.appName,
         theme: ThemeData(
