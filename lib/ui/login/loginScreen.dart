@@ -1,12 +1,11 @@
 import 'dart:developer';
 
+import 'package:base_flutter_provider_project/ui/login/otpScreen.dart';
 import 'package:flutter/material.dart';
 
-import '../../utils/commonTextFields.dart';
-import '../../utils/common_functions.dart';
-import '../dxf/dxfPage.dart';
-import '../home/home_screen.dart';
-import '../mapScreen/mapScreen.dart';
+import '../../common_widgets/login_widgets/text_image.dart';
+import '../../common_widgets/login_widgets/textfield_buttonlogin.dart';
+
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -24,64 +23,39 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var devicewidth = MediaQuery.sizeOf(context).width;
-
     return Scaffold(
         backgroundColor: Colors.white,
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  //const BackButtonLS(),
-                  SizedBox(
-                    height: 20,
-                  ),
-
-                  Center(
-                    child: Container(
-                        height: 260,
-                        width: 260,
-                        // color: Colors.yellow,
-                        child: Image.asset('assets/images/pragicon.png')),
-                  ),
-
-                  Text(
-                    'Log In To Continue!',
-                    style: Theme.of(context)
-                        .textTheme
-                        .displayMedium!
-                        .copyWith(fontWeight: FontWeight.bold, fontSize: 20),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  CustomTextField(
-                    txtType: TextInputType.number,
-                    controller: phoneNumberController,
-                    hintText: 'Phone number',
-                    maxLength: 10,
-                    onChanged: (u) {},
-                  ),
-
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    child: commonButton(
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
-                         // Navigator.push(context, MaterialPageRoute(builder: (context)=>DFXpage()));
-                        },
-                        btnName: "Submit",
-                        btncolors: Colors.green,
-                        width: devicewidth),
-                  ),
-                ],
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 100),
+              Center(
+                child: TextFieldImage(
+                    title: 'Verification',
+                    subtitle:
+                        'We will send your One Time Password on your phone number',
+                    image: 'assets/images/loginVerification.jpg'),
               ),
-            ),
+              const SizedBox(height: 50),
+              Center(
+                child: InkWell(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>OtpScreen()));
+                  },
+                  child: TextFieldButton(
+                    datactlr: phoneNumberController,
+                    //buttonname: 'GET OTP',
+                    label: 'Enter Phone Number',
+                    onChange: (v){
+
+                    },
+
+                  ),
+                ),
+              ),
+            ],
           ),
         ));
   }
