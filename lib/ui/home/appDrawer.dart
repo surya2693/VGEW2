@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../admin/adminHomePage.dart';
+import '../mapScreen/mapScreen.dart';
 import 'home_screen.dart';
 
 
@@ -51,8 +53,17 @@ class AppDrawer extends StatelessWidget {
             leading: Icon(Icons.map),
             title: Text('Maps'),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage())); // Close the drawer
+           //   Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage())); // Close the drawer
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>GoogleMapPage(lane: "left",)));
+
             },
+          ),
+          ListTile(
+            leading: Icon(Icons.map),
+            title: Text('Admin'),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>AdminHomePage()));
+              },
           ),
           ListTile(
             leading: Icon(Icons.settings),

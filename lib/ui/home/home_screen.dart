@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         children: [
          buildListTile("Right Selection",() {
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>GoogleMapPage()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>GoogleMapPage(lane: "left",)));
          },),
          SizedBox(height: 8,),
          buildListTile("Left Selection",() {

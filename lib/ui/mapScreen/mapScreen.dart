@@ -7,8 +7,13 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:location/location.dart';
 import 'package:geolocator/geolocator.dart';
-class GoogleMapPage extends StatefulWidget {
 
+import '../../utils/rich_text.dart';
+class GoogleMapPage extends StatefulWidget {
+final String? lane;
+GoogleMapPage({
+  this.lane
+});
 
   @override
   State<GoogleMapPage> createState() => _GoogleMapPageState();
@@ -23,10 +28,12 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   LatLng? _selectedLatLng;
   static const googlePlex = LatLng(12.9616, 77.5947);
   List<LatLng> polylineCoordinates = [];
-  LatLng? currentPosition;
+  LatLng? currentPosition = const LatLng(12.9616, 77.5947);
   Map<PolylineId, Polyline> polylines = {};
   dynamic totalDistance;
-
+  List<dynamic> leftLaneData =  [];
+  List<dynamic> getleftLaneData =  [];
+  List<dynamic> getrightLaneData =  [];
   @override
   void initState() {
     super.initState();
@@ -85,114 +92,239 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
     );
   }
   void _loadMarkers() {
-    final box = Hive.box('markers');
-    final markersData = box.values.toList();
-
-
-    setState(() {
-      _markers.addAll(
-        box.values.map((markerData) {
-          return Marker(
-            markerId: MarkerId(markerData['id']),
-            position: LatLng(markerData['latitude'], markerData['longitude']),
-            infoWindow: InfoWindow(
-              title: markerData['title'],
-              snippet: markerData['snippet'],
-            ),
+    // final box = Hive.box('markers');
+    // final markersData = box.values.toList();
+    print('late:: ${widget.lane}');
+    if(widget.lane == "left"){
+      getleftLaneData = box?.get('leftLaneData')??[];
+      print('retrived data getleftLaneData length  :: ${getleftLaneData.length}');
+      if(getleftLaneData.isNotEmpty){
+        _markers.clear();
+        setState(() {
+          _markers.addAll(
+            getleftLaneData.map<Marker>((markerData) {
+              return Marker(
+                markerId: MarkerId(markerData['id']),
+                position: LatLng(markerData['latitude'], markerData['longitude']),
+                infoWindow: InfoWindow(
+                  title: markerData['title'],
+                  snippet: markerData['snippet'],
+                ),
+              );
+            }),
           );
-        }),
-      );
 
 
-    print('retrived data :: ${_markers.length}');
+          print('retrived data :: ${_markers.length}');
 
-    // Add polylines to the map by connecting consecutive markers
-    if (markersData.length > 1) {
-      for (int i = 0; i < markersData.length - 1; i++) {
-        final start = LatLng(
-          markersData[i]['latitude'],
-          markersData[i]['longitude'],
-        );
-        final end = LatLng(
-          markersData[i + 1]['latitude'],
-          markersData[i + 1]['longitude'],
-        );
+          // Add polylines to the map by connecting consecutive markers
+          if (getleftLaneData.length > 1) {
+            for (int i = 0; i < getleftLaneData.length - 1; i++) {
+              final start = LatLng(
+                getleftLaneData[i]['latitude'],
+                getleftLaneData[i]['longitude'],
+              );
+              final end = LatLng(
+                getleftLaneData[i + 1]['latitude'],
+                getleftLaneData[i + 1]['longitude'],
+              );
 
-        _polylines.add(Polyline(
-          polylineId: PolylineId('polyline_$i'),
-          points: [start, end],
-          color: Colors.blue,
-          width: 5,
-        ));
+              _polylines.add(Polyline(
+                polylineId: PolylineId('polyline_$i'),
+                points: [start, end],
+                color: Colors.blue,
+                width: 5,
+              ));
+            }
+          }
+
+          // Set the previous point for future marker additions
+          if (getleftLaneData.isNotEmpty) {
+            final lastMarkerData = getleftLaneData.last;
+            _previousPoint = LatLng(lastMarkerData['latitude'], lastMarkerData['longitude']);
+            print('Previous Point Set: $_previousPoint');
+          }
+
+          if (_markers.length > 1) {
+            final previousMarker = _markers.first;
+            // final distance = calculateDistance(previousMarker.position, tappedPoint);
+            //  final distance = calculateDistance(LatLng(28.7041, 77.1025), LatLng(19.0760, 72.8777)); // returns CM
+            totalDistance = calculateDistanceMath(previousMarker.position.latitude, previousMarker.position.longitude, getleftLaneData.last['latitude'], getleftLaneData.last['longitude']);
+            //  var radius = calculateDistanceMath(28.7041, 77.1025, 19.0760, 72.8777); // returns KM
+            // print('Distance between markers: $totalDistance meters');
+            // print('Previous point: ${previousMarker.position}');
+            // print('Tapped point: $tappedPoint');
+            // Display the distance on the map or in a list, etc.
+          }
+        });
+      }else{
+        print('retrived data getleftLaneData empty :: ${_markers.length}');
+      }
+    }else{
+      getrightLaneData = box?.get('rightLaneData')??[];
+      print('retrived data getrightLaneData length  :: ${getrightLaneData.length}');
+      if(getrightLaneData.isNotEmpty){
+        _markers.clear();
+        setState(() {
+          _markers.addAll(
+            getrightLaneData.map<Marker>((markerData) {
+              return Marker(
+                markerId: MarkerId(markerData['id']),
+                position: LatLng(markerData['latitude'], markerData['longitude']),
+                infoWindow: InfoWindow(
+                  title: markerData['title'],
+                  snippet: markerData['snippet'],
+                ),
+              );
+            }),
+          );
+
+
+          print('retrived data :: ${_markers.length}');
+
+          // Add polylines to the map by connecting consecutive markers
+          if (getrightLaneData.length > 1) {
+            for (int i = 0; i < getrightLaneData.length - 1; i++) {
+              final start = LatLng(
+                getrightLaneData[i]['latitude'],
+                getrightLaneData[i]['longitude'],
+              );
+              final end = LatLng(
+                getrightLaneData[i + 1]['latitude'],
+                getrightLaneData[i + 1]['longitude'],
+              );
+
+              _polylines.add(Polyline(
+                polylineId: PolylineId('polyline_$i'),
+                points: [start, end],
+                color: Colors.blue,
+                width: 5,
+              ));
+            }
+          }
+
+          // Set the previous point for future marker additions
+          if (getrightLaneData.isNotEmpty) {
+            final lastMarkerData = getrightLaneData.last;
+            _previousPoint = LatLng(lastMarkerData['latitude'], lastMarkerData['longitude']);
+            print('Previous Point Set: $_previousPoint');
+          }
+
+          if (_markers.length > 1) {
+            final previousMarker = _markers.first;
+            // final distance = calculateDistance(previousMarker.position, tappedPoint);
+            //  final distance = calculateDistance(LatLng(28.7041, 77.1025), LatLng(19.0760, 72.8777)); // returns CM
+            totalDistance = calculateDistanceMath(previousMarker.position.latitude, previousMarker.position.longitude, getrightLaneData.last['latitude'], getrightLaneData.last['longitude']);
+            //  var radius = calculateDistanceMath(28.7041, 77.1025, 19.0760, 72.8777); // returns KM
+            // print('Distance between markers: $totalDistance meters');
+            // print('Previous point: ${previousMarker.position}');
+            // print('Tapped point: $tappedPoint');
+            // Display the distance on the map or in a list, etc.
+          }
+        });
+      }else{
+        print('retrived data getrightLaneData empty :: ${_markers.length}');
       }
     }
 
-    // Set the previous point for future marker additions
-    if (markersData.isNotEmpty) {
-      final lastMarkerData = markersData.last;
-      _previousPoint = LatLng(lastMarkerData['latitude'], lastMarkerData['longitude']);
-      print('Previous Point Set: $_previousPoint');
-    }
 
-      if (_markers.length > 1) {
-        final previousMarker = _markers.first;
-        // final distance = calculateDistance(previousMarker.position, tappedPoint);
-        //  final distance = calculateDistance(LatLng(28.7041, 77.1025), LatLng(19.0760, 72.8777)); // returns CM
-        totalDistance = calculateDistanceMath(previousMarker.position.latitude, previousMarker.position.longitude, markersData.last['latitude'], markersData.last['longitude']);
-        //  var radius = calculateDistanceMath(28.7041, 77.1025, 19.0760, 72.8777); // returns KM
-        // print('Distance between markers: $totalDistance meters');
-        // print('Previous point: ${previousMarker.position}');
-        // print('Tapped point: $tappedPoint');
-        // Display the distance on the map or in a list, etc.
-      }
-    });
+
   }
 
   void _onMapTap(LatLng tappedPoint) async{
     if (await _handleLocationPermission()) {
 
-      final markerData = {
-        'id': tappedPoint.toString(),
-        'latitude': tappedPoint.latitude,
-        'longitude': tappedPoint.longitude,
-        'title': 'Tapped Point',
-        'snippet': 'Latitude: ${tappedPoint.latitude}, Longitude: ${tappedPoint.longitude}',
-      };
+      if(widget.lane == "left"){
+        final markerData = {
+          'id': tappedPoint.toString(),
+          'latitude': tappedPoint.latitude,
+          'longitude': tappedPoint.longitude,
+          'title': 'Tapped Point',
+          'snippet': 'Latitude: ${tappedPoint.latitude}, Longitude: ${tappedPoint.longitude}',
+        };
+        getleftLaneData.add(markerData);
+        await box?.put('leftLaneData', getleftLaneData);
+        var updatedLeftLaneData = box?.get('leftLaneData');
+        print('Updated Left Lane Data: ${updatedLeftLaneData.length}');
 
-      box?.add(markerData);
+        setState(() {
+          _markers.add(Marker(
+            markerId: MarkerId(tappedPoint.toString()),
+            position: tappedPoint,
+            infoWindow: InfoWindow(
+              title: 'Tapped Point',
+              snippet: 'Latitude: ${tappedPoint.latitude}, Longitude: ${tappedPoint.longitude}',
+            ),
+          ));
+          if (_previousPoint != null) {
+            _polylines.add(Polyline(
+              polylineId: PolylineId('polyline_${_polylines.length}'),
+              points: [_previousPoint!, tappedPoint],
+              color: Colors.blue,
+              width: 5,
+            ));
 
-      print('OnTap markers:: ${box?.values.toList().length}');
-    setState(() {
-      _markers.add(Marker(
-        markerId: MarkerId(tappedPoint.toString()),
-        position: tappedPoint,
-        infoWindow: InfoWindow(
-          title: 'Tapped Point',
-          snippet: 'Latitude: ${tappedPoint.latitude}, Longitude: ${tappedPoint.longitude}',
-        ),
-      ));
-      if (_previousPoint != null) {
-        _polylines.add(Polyline(
-          polylineId: PolylineId('polyline_${_polylines.length}'),
-          points: [_previousPoint!, tappedPoint],
-          color: Colors.blue,
-          width: 5,
-        ));
+          }
+          if (_markers.length > 1) {
+            final previousMarker = _markers.first;
+            // final distance = calculateDistance(previousMarker.position, tappedPoint);
+            //  final distance = calculateDistance(LatLng(28.7041, 77.1025), LatLng(19.0760, 72.8777)); // returns CM
+            totalDistance = calculateDistanceMath(previousMarker.position.latitude, previousMarker.position.longitude, tappedPoint.latitude, tappedPoint.longitude);
+            //  var radius = calculateDistanceMath(28.7041, 77.1025, 19.0760, 72.8777); // returns KM
+            print('Distance between markers: $totalDistance meters');
+            print('Previous point: ${previousMarker.position}');
+            print('Tapped point: $tappedPoint');
+            // Display the distance on the map or in a list, etc.
+          }
+          _previousPoint = tappedPoint;
+        });
+      }else{
+        final markerData = {
+          'id': tappedPoint.toString(),
+          'latitude': tappedPoint.latitude,
+          'longitude': tappedPoint.longitude,
+          'title': 'Tapped Point',
+          'snippet': 'Latitude: ${tappedPoint.latitude}, Longitude: ${tappedPoint.longitude}',
+        };
+        getrightLaneData.add(markerData);
+        await box?.put('rightLaneData', getrightLaneData);
+        var updatedRightLaneData = box?.get('rightLaneData');
+        print('Updated Right Lane Data: ${updatedRightLaneData.length}');
 
+        setState(() {
+          _markers.add(Marker(
+            markerId: MarkerId(tappedPoint.toString()),
+            position: tappedPoint,
+            infoWindow: InfoWindow(
+              title: 'Tapped Point',
+              snippet: 'Latitude: ${tappedPoint.latitude}, Longitude: ${tappedPoint.longitude}',
+            ),
+          ));
+          if (_previousPoint != null) {
+            _polylines.add(Polyline(
+              polylineId: PolylineId('polyline_${_polylines.length}'),
+              points: [_previousPoint!, tappedPoint],
+              color: Colors.blue,
+              width: 5,
+            ));
+
+          }
+          if (_markers.length > 1) {
+            final previousMarker = _markers.first;
+            // final distance = calculateDistance(previousMarker.position, tappedPoint);
+            //  final distance = calculateDistance(LatLng(28.7041, 77.1025), LatLng(19.0760, 72.8777)); // returns CM
+            totalDistance = calculateDistanceMath(previousMarker.position.latitude, previousMarker.position.longitude, tappedPoint.latitude, tappedPoint.longitude);
+            //  var radius = calculateDistanceMath(28.7041, 77.1025, 19.0760, 72.8777); // returns KM
+            print('Distance between markers: $totalDistance meters');
+            print('Previous point: ${previousMarker.position}');
+            print('Tapped point: $tappedPoint');
+            // Display the distance on the map or in a list, etc.
+          }
+          _previousPoint = tappedPoint;
+        });
       }
-      if (_markers.length > 1) {
-        final previousMarker = _markers.first;
-       // final distance = calculateDistance(previousMarker.position, tappedPoint);
-      //  final distance = calculateDistance(LatLng(28.7041, 77.1025), LatLng(19.0760, 72.8777)); // returns CM
-         totalDistance = calculateDistanceMath(previousMarker.position.latitude, previousMarker.position.longitude, tappedPoint.latitude, tappedPoint.longitude);
-      //  var radius = calculateDistanceMath(28.7041, 77.1025, 19.0760, 72.8777); // returns KM
-        print('Distance between markers: $totalDistance meters');
-        print('Previous point: ${previousMarker.position}');
-        print('Tapped point: $tappedPoint');
-        // Display the distance on the map or in a list, etc.
-      }
-      _previousPoint = tappedPoint;
-    });
+
+
 
 
     }else {
@@ -218,6 +350,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
           currentPosition == null
               ? const Center(child: CircularProgressIndicator())
               : GoogleMap(
+            zoomControlsEnabled: false,
             initialCameraPosition: const CameraPosition(
               target: googlePlex,
               zoom: 18,
@@ -229,20 +362,32 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
 
           ),
           Positioned(
-            bottom: 150,
-            right: 15,
-            child:
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            bottom: 10, // Position the container at the bottom
+            right: 0, // Position the container at the right
+            child: Column(
               children: [
                 Card(
                   elevation: 4,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      'Distance: ${formatToTwoDecimals(totalDistance ?? 0.0)} KM',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    // child: Text(
+                    //   'Distance: ${formatToTwoDecimals(totalDistance ?? 0.0)} KM',
+                    //   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    // ),
+                    child: CustomRichText(
+                      textSpans: [
+                        const TextSpan(
+                          text: 'Distance: ',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey),
+                        ),
+                        TextSpan(
+                          text: '${formatToTwoDecimals(totalDistance ?? 0.0)} KM',
+                          style: TextStyle(fontSize: 18, color: Colors.black),
+                        ),
+                      ],
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
                     ),
                   ),
                 ),
@@ -258,7 +403,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                         children: [
                           Text(
                             'Delete Points',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.grey),
                           ),
                           SizedBox(width: 10,),
                           Icon(Icons.delete,color: Colors.red,)
@@ -266,9 +411,25 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                       ),
                     ),
                   ),
-                )
+                ),
+                InkWell(
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>GoogleMapPage(lane: widget.lane == "left"?"Right":"left",)));
+                  },
+                  child: Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    child:  Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Text(
+                        'Mark ${widget.lane == "left"?"Right":"Left"} Lane',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.green),
+                      ),
+                    ),
+                  ),
+                ),
               ],
-            )
+            ),
           ),
 
         ],
