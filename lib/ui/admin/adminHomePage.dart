@@ -1,3 +1,4 @@
+import 'package:base_flutter_provider_project/ui/admin/requestDecision.dart';
 import 'package:flutter/material.dart';
 
 import 'materialRequest.dart';
@@ -17,7 +18,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
   // List of pages for each tab
   final List<Widget> _pages = [
     AdminMaterialRequest(),
-    Center(child: Text('Search Page', style: TextStyle(fontSize: 20))),
+    RequestDecision(),
     Center(child: Text('Profile Page', style: TextStyle(fontSize: 20))),
     Center(child: Text('Profile Page', style: TextStyle(fontSize: 20))),
     Center(child: Text('Profile Page', style: TextStyle(fontSize: 20))),
