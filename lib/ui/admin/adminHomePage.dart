@@ -1,11 +1,13 @@
 import 'package:base_flutter_provider_project/ui/admin/requestDecision.dart';
 import 'package:flutter/material.dart';
 
+import '../material/materialRequestReview.dart';
 import 'materialRequest.dart';
 
 
 class AdminHomePage extends StatefulWidget {
-  const AdminHomePage({super.key});
+  final String role;
+  const AdminHomePage({super.key,required this.role});
 
   @override
   State<AdminHomePage> createState() => _AdminHomePageState();
@@ -15,15 +17,32 @@ class _AdminHomePageState extends State<AdminHomePage> {
 
   int _currentIndex = 0; // To track the selected tab
 
+  String get _role => widget.role;
   // List of pages for each tab
   final List<Widget> _pages = [
-    AdminMaterialRequest(),
+    //AdminMaterialRequest() ,
     RequestDecision(),
     Center(child: Text('Profile Page', style: TextStyle(fontSize: 20))),
     Center(child: Text('Profile Page', style: TextStyle(fontSize: 20))),
     Center(child: Text('Profile Page', style: TextStyle(fontSize: 20))),
   ];
 
+
+  @override
+  void initState() {
+    super.initState();
+    if(_role == "admin"){
+      _pages.insert(0, AdminMaterialRequest());
+      setState(() {
+
+      });
+    }else{
+      _pages.insert(0, MaterialRequestRievew());
+      setState(() {
+
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

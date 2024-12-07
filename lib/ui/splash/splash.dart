@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'package:auto_route/auto_route.dart';
 import 'package:base_flutter_provider_project/common_widgets/alert_widgets/permission_prompt.dart';
 import 'package:base_flutter_provider_project/common_widgets/brand_logo.dart';
 import 'package:base_flutter_provider_project/constants/constant.dart';
 import 'package:base_flutter_provider_project/constants/theme_color.dart';
-import 'package:base_flutter_provider_project/routes/router_pages.gr.dart';
 import 'package:base_flutter_provider_project/ui/login/loginScreen.dart';
 import 'package:base_flutter_provider_project/utils/common_functions.dart';
 import 'package:base_flutter_provider_project/utils/logger.dart';

@@ -77,7 +77,8 @@ class AppDrawer extends StatelessWidget {
               ListTile(
                 title:const Text('Material'),
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>MaterialRequestRievew()));
+                 // Navigator.push(context, MaterialPageRoute(builder: (context)=>MaterialRequestRievew()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>AdminHomePage(role: "",)));
                 },
 
               ),
@@ -140,7 +141,7 @@ class AppDrawer extends StatelessWidget {
             leading: Icon(Icons.map),
             title: Text('Admin'),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>AdminHomePage()));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>AdminHomePage(role: "admin",)));
               },
           ),
           ExpansionTile(title: const Text('Settings'),leading: const Icon(Icons.settings),
