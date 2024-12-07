@@ -1,7 +1,7 @@
 import 'package:base_flutter_provider_project/constants/strings.dart';
 import 'package:base_flutter_provider_project/constants/theme_color.dart';
-import 'package:base_flutter_provider_project/routes/router_pages.gr.dart';
 import 'package:base_flutter_provider_project/ui/login/loginScreen.dart';
+import 'package:base_flutter_provider_project/ui/material/materialRequestReview.dart';
 import 'package:base_flutter_provider_project/ui/splash/splash.dart';
 import 'package:base_flutter_provider_project/utils/app_bar_theme.dart';
 import 'package:base_flutter_provider_project/viewModel/home_viewmodel.dart';
@@ -21,7 +21,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final _appRouter = AppRouter();
+  //final _appRouter = AppRouter();
   late BuildContext ctx;
 
   @override

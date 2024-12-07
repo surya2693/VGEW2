@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../admin/adminHomePage.dart';
 import '../mapScreen/mapScreen.dart';
+import '../material/materialRequestReview.dart';
 import 'home_screen.dart';
 
 
@@ -26,32 +27,109 @@ class AppDrawer extends StatelessWidget {
               ),
             ),
           ),
+          
           ListTile(
-            leading: Icon(Icons.home),
-            title: Text('Home'),
+            leading:const Icon(Icons.home),
+            title:const Text('Home'),
             onTap: () {
               Navigator.pop(context); // Close the drawer
             },
 
           ),
-          ListTile(
-            leading: Icon(Icons.phonelink_setup),
-            title: Text('Master Setup'),
-            onTap: () {
-              Navigator.pop(context); // Close the drawer
-            },
+          ExpansionTile(title:const Text('Master Setup'),
+            leading:const Icon(Icons.admin_panel_settings),
+            children: [
+              ListTile(
+                title:const Text('Units'),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
+                },
 
+              ),
+              ListTile(
+                title:const Text('Designation'),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
+                },
+
+              ),
+              ListTile(
+                title:const Text('Project Types'),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
+                },
+
+              ),
+              ListTile(
+                title:const Text('Employees'),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
+                },
+
+              ),
+              ListTile(
+                title:const Text('Equipments'),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
+                },
+
+              ),
+              ListTile(
+                title:const Text('Material'),
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>MaterialRequestRievew()));
+                },
+
+              ),
+              ListTile(
+                title:const Text('Color Codes'),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
+                },
+
+              ),
+
+            ],
           ),
-          ListTile(
-            leading: Icon(Icons.transcribe),
-            title: Text('Transactions'),
-            onTap: () {
-              Navigator.pop(context); // Close the drawer
-            },
+          ExpansionTile(title:const Text('Transactions'),
+            leading:const Icon(Icons.business),
+            children: [
+              ListTile(
+                title:const Text('Project Creation'),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
+                },
+              ),
+              ListTile(
+                title:const Text('Project Jobs'),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
+                },
+              ),
+              ListTile(
+                title:const Text('Job Current Status'),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
+                },
+              ),
+              ListTile(
+                title:const Text('Project Material'),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
+                },
+              ),
+              ListTile(
+                title: const Text('Project Equipments'),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
+                },
+              ),
+            ],
           ),
+
           ListTile(
-            leading: Icon(Icons.map),
-            title: Text('Maps'),
+            leading: const Icon(Icons.map),
+            title: const Text('Maps'),
             onTap: () {
            //   Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage())); // Close the drawer
               Navigator.push(context, MaterialPageRoute(builder: (context)=>GoogleMapPage(lane: "left",)));
@@ -65,17 +143,33 @@ class AppDrawer extends StatelessWidget {
               Navigator.push(context, MaterialPageRoute(builder: (context)=>AdminHomePage()));
               },
           ),
-          ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Settings'),
-            onTap: () {
-              Navigator.pop(context); // Close the drawer
-            },
+          ExpansionTile(title: const Text('Settings'),leading: const Icon(Icons.settings),
+            children: [
+              ListTile(
+                title: const Text('Users'),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
+                },
+              ),
+              ListTile(
+                title: const Text('Roles'),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
+                },
+              ),
+              ListTile(
+                title: const Text('EntityInformation'),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
+                },
+              ),
+            ],
           ),
-          Divider(),
+
+          const Divider(),
           ListTile(
-            leading: Icon(Icons.logout),
-            title: Text('Logout'),
+            leading: const Icon(Icons.logout),
+            title: const Text('Logout'),
             onTap: () {
               Navigator.pop(context); // Close the drawer
             },

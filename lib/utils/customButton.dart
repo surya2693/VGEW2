@@ -8,6 +8,7 @@ class CommonButton extends StatelessWidget {
   final double borderRadius;
   final double fontSize;
   final double padding;
+  final Color? bordercolor;
 
   const CommonButton({
     Key? key,
@@ -18,6 +19,7 @@ class CommonButton extends StatelessWidget {
     this.borderRadius = 8.0,
     this.fontSize = 16.0,
     this.padding = 12.0,
+    this.bordercolor=Colors.white
   }) : super(key: key);
 
   @override
@@ -26,6 +28,7 @@ class CommonButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: backgroundColor,
         padding: EdgeInsets.symmetric(vertical: padding, horizontal: padding * 2),
+        side: BorderSide(color:bordercolor??Colors.white ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(borderRadius),
         ),
