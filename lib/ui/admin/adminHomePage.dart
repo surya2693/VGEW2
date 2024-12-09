@@ -2,6 +2,7 @@ import 'package:base_flutter_provider_project/ui/admin/requestDecision.dart';
 import 'package:flutter/material.dart';
 
 import '../material/materialRequestReview.dart';
+import 'assignSupplier.dart';
 import 'materialRequest.dart';
 
 
@@ -22,7 +23,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
   final List<Widget> _pages = [
     //AdminMaterialRequest() ,
     RequestDecision(),
-    Center(child: Text('Profile Page', style: TextStyle(fontSize: 20))),
+    AssignSupplier(),
     Center(child: Text('Profile Page', style: TextStyle(fontSize: 20))),
     Center(child: Text('Profile Page', style: TextStyle(fontSize: 20))),
   ];

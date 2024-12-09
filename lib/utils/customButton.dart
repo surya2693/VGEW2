@@ -9,6 +9,7 @@ class CommonButton extends StatelessWidget {
   final double fontSize;
   final double padding;
   final Color? bordercolor;
+  final bool? isBtnVisible;
 
   const CommonButton({
     Key? key,
@@ -19,7 +20,8 @@ class CommonButton extends StatelessWidget {
     this.borderRadius = 8.0,
     this.fontSize = 16.0,
     this.padding = 12.0,
-    this.bordercolor=Colors.white
+    this.bordercolor=Colors.white,
+    this.isBtnVisible
   }) : super(key: key);
 
   @override
@@ -34,13 +36,21 @@ class CommonButton extends StatelessWidget {
         ),
       ),
       onPressed: onPressed,
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: fontSize,
-          color: textColor,
-          fontWeight: FontWeight.bold,
-        ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: fontSize,
+              color: textColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Visibility(
+              visible: isBtnVisible ?? false,
+              child: Icon(Icons.arrow_circle_right_outlined,color: Colors.white,))
+        ],
       ),
     );
   }

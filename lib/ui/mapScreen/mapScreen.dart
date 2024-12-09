@@ -362,8 +362,8 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
 
           ),
           Positioned(
-            bottom: 10, // Position the container at the bottom
-            right: 0, // Position the container at the right
+            bottom: 10,
+            right: 0,
             child: Column(
               children: [
                 Card(
