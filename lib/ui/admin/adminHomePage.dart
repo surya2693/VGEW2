@@ -2,6 +2,7 @@ import 'package:base_flutter_provider_project/ui/admin/requestDecision.dart';
 import 'package:flutter/material.dart';
 
 import '../material/materialRequestReview.dart';
+import '../material/receiveMaterialRequest.dart';
 import 'assignSupplier.dart';
 import 'materialRequest.dart';
 
@@ -22,8 +23,9 @@ class _AdminHomePageState extends State<AdminHomePage> {
   // List of pages for each tab
   final List<Widget> _pages = [
     //AdminMaterialRequest() ,
-    RequestDecision(),
-    AssignSupplier(),
+
+
+
     Center(child: Text('Profile Page', style: TextStyle(fontSize: 20))),
     Center(child: Text('Profile Page', style: TextStyle(fontSize: 20))),
   ];
@@ -34,11 +36,15 @@ class _AdminHomePageState extends State<AdminHomePage> {
     super.initState();
     if(_role == "admin"){
       _pages.insert(0, AdminMaterialRequest());
+      _pages.insert(1 , RequestDecision());
+      _pages.insert(2, AssignSupplier());
       setState(() {
 
       });
     }else{
       _pages.insert(0, MaterialRequestRievew());
+      _pages.insert(1, RecieveMaterialRequest());
+
       setState(() {
 
       });

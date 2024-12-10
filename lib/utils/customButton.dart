@@ -37,14 +37,16 @@ class CommonButton extends StatelessWidget {
       ),
       onPressed: onPressed,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            text,
-            style: TextStyle(
-              fontSize: fontSize,
-              color: textColor,
-              fontWeight: FontWeight.bold,
+          Center(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: fontSize,
+                color: textColor,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           Visibility(

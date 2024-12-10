@@ -4,8 +4,9 @@ class RequestTextField extends StatefulWidget {
   final String? qtys;
   final TextEditingController ctlr;
   final String? hintname;
+  final double? textfieldheight;
 
-   RequestTextField({ this.qtys,required this.ctlr,this.hintname});
+   RequestTextField({ this.qtys,required this.ctlr,this.hintname,this.textfieldheight});
 
   @override
   State<RequestTextField> createState() => _RequestTextFieldState();
@@ -26,7 +27,7 @@ class _RequestTextFieldState extends State<RequestTextField> {
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
             Container(
-              height: 50,
+              height: widget.textfieldheight??50,
               child: TextField(
                 controller: widget.ctlr,
                 onChanged: (v) {},

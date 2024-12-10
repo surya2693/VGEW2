@@ -4,6 +4,7 @@ import '../../common_widgets/dropDownBox.dart';
 import '../../common_widgets/requestTextField.dart';
 import '../../utils/commonWidgets.dart';
 import '../../utils/customButton.dart';
+import 'materialRequestDecision.dart';
 
 class MaterialRequestRievew extends StatefulWidget {
   const MaterialRequestRievew({super.key});
@@ -16,7 +17,7 @@ class _MaterialRequestRievewState extends State<MaterialRequestRievew> {
   TextEditingController _chainageController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    var deviceWidth= MediaQuery.sizeOf(context).width;
+    var deviceWidth = MediaQuery.sizeOf(context).width;
     return Scaffold(
       appBar: buildAppBar('Request Materials', "Help", () {}),
       body: SingleChildScrollView(
@@ -24,8 +25,11 @@ class _MaterialRequestRievewState extends State<MaterialRequestRievew> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              topCardUi("Raise a Request",
-                  "Please fill out the form below and let us know what you need."),
+              Align(
+                alignment: Alignment.topLeft,
+                child: topCardUi("Raise a Request",
+                    "Please fill out the form below and let us know what you need."),
+              ),
               const DropdownBox(text: 'Project'),
               RequestTextField(
                 qtys: 'Chainage',
@@ -111,15 +115,17 @@ class _MaterialRequestRievewState extends State<MaterialRequestRievew> {
                 width: deviceWidth,
                 child: Row(
                   children: [
+                    Expanded(flex: 1, child: Text("")),
                     Expanded(
-                        flex:1,
-                        child: Text("")),
+                        flex: 1,
+                        child: Text(
+                          "Materials".toUpperCase(),
+                          style: TextStyle(color: Colors.white),
+                        )),
                     Expanded(
-                        flex:1,
-                        child: Text("Materials".toUpperCase(),style: TextStyle(color: Colors.white),)),
-                    Expanded(
-                        flex:1,
-                        child: Text("Cost",style: TextStyle(color: Colors.white))),
+                        flex: 1,
+                        child: Text("Cost",
+                            style: TextStyle(color: Colors.white))),
                   ],
                 ),
               ),
@@ -127,7 +133,7 @@ class _MaterialRequestRievewState extends State<MaterialRequestRievew> {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: 2,
-                  itemBuilder: (context,index){
+                  itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
@@ -137,17 +143,13 @@ class _MaterialRequestRievewState extends State<MaterialRequestRievew> {
                         child: const Row(
                           children: [
                             Expanded(
-                                flex:1,
+                                flex: 1,
                                 child: Padding(
                                   padding: EdgeInsets.only(left: 8.0),
                                   child: Text("1"),
                                 )),
-                            Expanded(
-                                flex:1,
-                                child: Text("M Sand")),
-                            Expanded(
-                                flex:1,
-                                child: Text("10 units")),
+                            Expanded(flex: 1, child: Text("M Sand")),
+                            Expanded(flex: 1, child: Text("10 units")),
                           ],
                         ),
                       ),
@@ -160,11 +162,16 @@ class _MaterialRequestRievewState extends State<MaterialRequestRievew> {
                 child: Row(
                   children: [
                     Expanded(
-                        flex:2,
-                        child: Center(child: Text("Total".toUpperCase(),style: TextStyle(color: Colors.white),))),
+                        flex: 2,
+                        child: Center(
+                            child: Text(
+                          "Total".toUpperCase(),
+                          style: TextStyle(color: Colors.white),
+                        ))),
                     const Expanded(
-                        flex:1,
-                        child: Text("#####",style: TextStyle(color: Colors.white))),
+                        flex: 1,
+                        child: Text("#####",
+                            style: TextStyle(color: Colors.white))),
                   ],
                 ),
               ),
@@ -172,8 +179,7 @@ class _MaterialRequestRievewState extends State<MaterialRequestRievew> {
                 height: 20,
               ),
               Container(
-                width:deviceWidth ,
-
+                width: deviceWidth,
                 child: CommonButton(
                   text: "Cancel",
                   onPressed: () {
@@ -190,10 +196,11 @@ class _MaterialRequestRievewState extends State<MaterialRequestRievew> {
                 height: 10,
               ),
               Container(
-                width:deviceWidth ,
+                //width: deviceWidth,
                 child: CommonButton(
                   text: "Next",
                   onPressed: () {
+
                     print("Button Clicked!");
                   },
                   backgroundColor: Colors.blue,
